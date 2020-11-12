@@ -11,10 +11,10 @@
 
         public function __construct()
         {
-            $this->conectar();
+            $this->connect();
         }
 
-        public function conectar()
+        private function connect()
         {
             $this->con = mysqli_connect($this->host, $this->user, $this->pass, $this->name);
             if(mysqli_connect_error())
@@ -30,7 +30,7 @@
         }
 
         //insercion de datos
-        public function insertarProducto($nombre, $descripcion,  $caracteristicas, $precio, $tipo)
+        public function insert_prod($nombre, $descripcion,  $caracteristicas, $precio, $tipo)
         {
             $sql = "INSERT INTO producto(nom_prod, desc_prod, carac_prod, precio_prod, tipo_prod)
                         VALUES('$nombre', '$descripcion','$caracteristicas',$precio, '$tipo')";
@@ -38,6 +38,32 @@
             return $res == 1;
         }
 
+        //obtiene los datos de un producto a partir de su id
+        public function get_prod($id)
+        {
+            $sql = "SELECT * from producto WHERE id_prod = $id";
+            $res = mysqli_query($this->con, $sql) or die("error de consulta");
+            $file = $res->fetch_assoc();
+
+            return $file;
+        }
+
+        //obtiene una coleccion de imagenes a partir de el id del producto
+        public function get_image_prod($id)
+        {
+            $sql = "SELECT img FROM imagen WHERE fk_prod = $id";
+            $res = mysqli_query($this->con, $sql);
+
+            return $res;
+        }
+
+        //obtiene los datos (nombre, imagen, precio) de los primeros 20 productos ordenados por fecha
+        public function get_view_prod_index()
+        {
+            $sql = "SELECT * FROM prod_portal";
+            $res = mysqli_query($this->con, $sql);
+            return $res;
+        }
     }
 
 ?>
